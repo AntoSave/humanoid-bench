@@ -7,3 +7,10 @@ dist
 
 # macOS
 .DS_Store
+
+# build data
+build/
+
+# training data
+logs/
+outputs/
