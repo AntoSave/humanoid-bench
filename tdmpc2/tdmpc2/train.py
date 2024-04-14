@@ -52,6 +52,7 @@ def train(cfg: dict):
     print(colored("Work dir:", "yellow", attrs=["bold"]), cfg.work_dir)
 
     trainer_cls = OfflineTrainer if cfg.multitask else OnlineTrainer
+    print("Using trainer:", trainer_cls.__name__)
     trainer = trainer_cls(
         cfg=cfg,
         env=make_env(cfg),
