@@ -2,7 +2,7 @@ defaults:
     - override hydra/launcher: submitit_local
 
 # environment
-task: dog-run
+task: humanoid_h1-walk-v0
 obs: state
 
 # evaluation
@@ -11,7 +11,7 @@ eval_episodes: 1
 eval_freq: 50000
 
 # training
-steps: 10_000_000
+steps: 5_000_000
 batch_size: 256
 reward_coef: 0.1
 value_coef: 0.1
@@ -25,8 +25,9 @@ discount_denom: 5
 discount_min: 0.95
 discount_max: 0.995
 buffer_size: 3_000_000
-exp_name: default
+exp_name: tdmpc
 data_dir: ???
+save_freq: 10_000
 
 # planning
 mpc: true
