@@ -1,7 +1,7 @@
 import os
 import sys
 
-if sys.platform != "darwin"
+if sys.platform != "darwin":
     os.environ["MUJOCO_GL"] = "egl"
 
 import warnings
@@ -101,11 +101,16 @@ def evaluate(cfg: dict):
         ep_rewards, ep_successes = [], []
         for i in range(cfg.eval_episodes):
             obs, done, ep_reward, t = env.reset(task_idx=task_idx), False, 0, 0
+            #Adapt to the new observation format
+            obs = obs[0] if isinstance(obs, tuple) else obs
             if cfg.save_video:
                 frames = [env.render()]
             while not done:
                 action = agent.act(obs, t0=t == 0, task=task_idx)
-                obs, reward, done, info = env.step(action)
+                obs, reward, terminated, truncated, info = env.step(action)
+                #Adapt to the new observation and done format
+                obs = obs[0] if isinstance(obs, tuple) else obs
+                done = terminated or truncated
                 ep_reward += reward
                 t += 1
                 if cfg.save_video:
