@@ -50,13 +50,26 @@ def train(cfg: dict):
     cfg = parse_cfg(cfg)
     set_seed(cfg.seed)
     print(colored("Work dir:", "yellow", attrs=["bold"]), cfg.work_dir)
+    print(colored(f"Checkpoint: {cfg.checkpoint}", "blue", attrs=["bold"]))
 
     trainer_cls = OfflineTrainer if cfg.multitask else OnlineTrainer
     print("Using trainer:", trainer_cls.__name__)
+    env=make_env(cfg)
+    agent=TDMPC2(cfg)
+    print("Agent created")
+    if os.path.exists(cfg.checkpoint):
+        print("Loading checkpoint")
+        agent.load(cfg.checkpoint)
+        cfg.from_scratch = True
+        print("Loaded checkpoint from",cfg.checkpoint)
+        print("Training from scratch",cfg.from_scratch)
+    else:
+        print("No checkpoint provided, training from scratch")
+
     trainer = trainer_cls(
         cfg=cfg,
-        env=make_env(cfg),
-        agent=TDMPC2(cfg),
+        env=env,
+        agent=agent,
         buffer=Buffer(cfg),
         logger=Logger(cfg),
     )
